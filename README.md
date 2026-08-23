@@ -73,20 +73,21 @@
 
 | 層 | 技術 |
 |-------|------|
-| **フロントエンド** | HTML5 + CSS3 + JavaScript (Vanilla) |
-| **状態管理** | LocalStorage（ブラウザ内保存） |
-| **ドラッグ&ドロップ** | HTML5 Drag & Drop API またはライブラリ（検討中） |
+| **フロントエンド** | React + Vite |
+| **状態管理** | React State (useState/useReducer) + LocalStorage |
+| **ドラッグ&ドロップ** | `@hello-pangea/dnd` または `dnd-kit`（検討中） |
 
 ---
 
 ## 実装ロードマップ
 
 ### フェーズ1: 基本UI構築
-- ボード・カード表示のHTMLテンプレート作成
+- Vite + Reactプロジェクトの初期セットアップ（`npm create vite@latest`）
+- Board・Column・Cardコンポーネントの作成
 - CSSでレイアウト完成
 
 ### フェーズ2: インタラクション実装
-- ドラッグ&ドロップ機能の実装
+- ドラッグ&ドロップライブラリの導入・実装
 - カード追加・削除の基本機能
 
 ### フェーズ3: データ永続化
@@ -109,12 +110,19 @@
 taskmanagement/
 ├── README.md（このファイル）
 ├── index.html
-├── css/
-│   └── style.css
-├── js/
-│   ├── app.js（メインロジック）
-│   ├── board.js（ボード管理）
-│   └── card.js（カード管理）
+├── package.json
+├── vite.config.js
+├── src/
+│   ├── main.jsx
+│   ├── App.jsx
+│   ├── components/
+│   │   ├── Board.jsx
+│   │   ├── Column.jsx
+│   │   └── Card.jsx
+│   ├── hooks/
+│   │   └── useLocalStorage.js
+│   └── styles/
+│       └── style.css
 └── assets/（必要に応じて）
 ```
 
