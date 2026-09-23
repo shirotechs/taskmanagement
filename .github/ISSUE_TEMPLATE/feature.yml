@@ -1,0 +1,29 @@
+name: 機能追加 (Feature)
+description: 新しい機能や改善を提案・登録する
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: 概要
+      description: 何を実現したいか簡潔に
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: 背景・目的
+      description: なぜ必要か
+    validations:
+      required: false
+  - type: textarea
+    id: tasks
+    attributes:
+      label: 作業内容 / タスク
+      description: 実装に必要な作業をチェックリストで
+      placeholder: |
+        - [ ]
+        - [ ]
+    validations:
+      required: false
