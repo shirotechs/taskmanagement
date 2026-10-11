@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
+    strictPort: true, // 使用中なら別ポートにずらさず失敗させる(ポート競合防止)
     proxy: {
       '/api': 'http://localhost:8080',
     },
