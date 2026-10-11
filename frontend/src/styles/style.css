@@ -1,0 +1,45 @@
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+  background: #0079bf;
+  color: #172b4d;
+}
+.app { padding: 16px 24px; min-height: 100vh; }
+.app-header h1 { margin: 0 0 12px; color: #fff; font-size: 1.4rem; }
+
+.search-form { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.search-form input, .search-form select {
+  padding: 8px 10px; border: none; border-radius: 4px; font-size: 0.9rem;
+}
+.search-form input { flex: 1; min-width: 200px; }
+.search-form button {
+  padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;
+  background: #fff; color: #0079bf; font-weight: 600;
+}
+.search-form button.secondary { background: rgba(255, 255, 255, 0.3); color: #fff; }
+
+.message { color: #fff; margin: 0 0 12px; }
+.message.error { background: #eb5a46; padding: 8px 12px; border-radius: 4px; }
+
+.board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; align-items: start; }
+@media (max-width: 800px) { .board { grid-template-columns: 1fr; } }
+
+.column { background: #ebecf0; border-radius: 6px; padding: 10px; }
+.column h2 { margin: 0 0 10px; font-size: 1rem; }
+.column .count {
+  display: inline-block; margin-left: 4px; padding: 0 8px; border-radius: 10px;
+  background: #c1c7d0; font-size: 0.8rem; font-weight: normal;
+}
+.cards { display: flex; flex-direction: column; gap: 8px; }
+.empty { margin: 0; color: #6b778c; font-size: 0.85rem; }
+
+.card { background: #fff; border-radius: 4px; padding: 10px; box-shadow: 0 1px 0 rgba(9, 30, 66, 0.25); }
+.card h3 { margin: 0 0 6px; font-size: 0.95rem; }
+.card .description { margin: 0 0 8px; font-size: 0.85rem; color: #5e6c84; white-space: pre-wrap; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px; font-size: 0.75rem; }
+.badge { padding: 2px 8px; border-radius: 3px; color: #fff; }
+.priority-high { background: #eb5a46; }
+.priority-medium { background: #f2a60c; }
+.priority-low { background: #61bd4f; }
+.due { padding: 2px 0; color: #5e6c84; }
