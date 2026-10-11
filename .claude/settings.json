@@ -1,4 +1,9 @@
 {
+  "env": {
+    "BACKEND_PORT": "8080",
+    "FRONTEND_PORT": "5173",
+    "MYSQL_PORT": "3306"
+  },
   "permissions": {
     "defaultMode": "auto",
     "allow": [
@@ -12,7 +17,11 @@
       "Bash(git checkout -b *)",
       "Bash(npm install)",
       "Bash(npm run:*)",
-      "Bash(npm test:*)"
+      "Bash(npm test:*)",
+      "Bash(./gradlew bootRun)",
+      "Bash(npm run dev)",
+      "Bash(docker compose up -d)",
+      "Bash(lsof -ti:*)"
     ],
     "ask": [
       "Bash(rm -rf:*)",
