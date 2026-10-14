@@ -33,16 +33,5 @@ Issue番号を含めた以下の形式でブランチを作成する。
 - 1コミットにつき1つの論理的な変更にまとめる(無関係な変更を1コミットに混ぜない)。
 
 ## 6. 開発サーバーのポート(固定)
-動作確認のためにサーバーを起動する際は、必ず以下のデフォルトポートで起動すること。ポート番号の変更や、別ポートへの退避は行わない。
-
-| サーバー | ポート | 起動コマンド |
-|---|---|---|
-| MySQL (Docker) | 3306 | `docker compose up -d` |
-| BE (Spring Boot) | 8080 | `cd backend && ./gradlew bootRun` |
-| FE (Vite) | 5173 | `cd frontend && npm run dev` |
-
-- 起動前に `lsof -ti:<ポート>` で使用中でないか確認する。
-- 使用中の場合は、別ポートで起動せず、先に使用中のプロセスの正体を確認する。ユーザーの別プロセスの可能性があるため、勝手に停止せずユーザーに確認する。自分(Claude)が起動したサーバーが残っている場合のみ停止してよい。
-- FEは `vite.config.js` の `strictPort: true` により、5173が使用中なら起動に失敗する(自動で別ポートにずれない)。
-- FEの `/api` はViteのプロキシ経由でBE(8080)に転送される。
-- ポート番号は `.claude/settings.json` の `env`(`BACKEND_PORT` / `FRONTEND_PORT` / `MYSQL_PORT`)にも定義している。
+動作確認のためにサーバーを起動する際は、必ず固定のデフォルトポート(MySQL 3306 / BE 8080 / FE 5173)で起動し、別ポートに逃がさない。
+詳細な手順は Skill `dev-server-ports`(`.claude/skills/dev-server-ports/SKILL.md`)に従うこと。
