@@ -27,3 +27,20 @@
 ## 注釈
 - 実装を進める中で、機能が追加・変更される可能性がある
 - GitHubで学習用プロジェクトとして公開予定
+
+---
+
+## 開発環境の起動
+
+```bash
+# 1. MySQL
+docker compose up -d
+
+# 2. バックエンド (http://localhost:8080)
+cd backend && ./gradlew bootRun
+
+# 3. フロントエンド (http://localhost:5173)
+cd frontend && npm install && npm run dev
+```
+
+フロントの `/api` へのリクエストは Vite のプロキシ経由でバックエンドに転送される。
