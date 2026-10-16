@@ -1,6 +1,8 @@
-const PRIORITY_LABEL = { HIGH: '高', MEDIUM: '中', LOW: '低' }
+import type { Priority, Task } from '../types.ts'
 
-export default function Card({ task }) {
+const PRIORITY_LABEL: Record<Priority, string> = { HIGH: '高', MEDIUM: '中', LOW: '低' }
+
+export default function Card({ task }: { task: Task }) {
   return (
     <article className="card">
       <h3>{task.title}</h3>

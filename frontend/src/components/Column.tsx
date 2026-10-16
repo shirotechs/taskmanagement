@@ -1,6 +1,12 @@
-import Card from './Card.jsx'
+import type { Task } from '../types.ts'
+import Card from './Card.tsx'
 
-export default function Column({ title, tasks }) {
+interface Props {
+  title: string
+  tasks: Task[]
+}
+
+export default function Column({ title, tasks }: Props) {
   return (
     <section className="column">
       <h2>

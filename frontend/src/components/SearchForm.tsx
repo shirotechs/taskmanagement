@@ -1,10 +1,16 @@
 import { useState } from 'react'
+import type { Priority, SearchCondition, Status } from '../types.ts'
+
+interface Props {
+  condition: SearchCondition
+  onSearch: (condition: SearchCondition) => void
+}
 
 // キーワードは「検索」ボタン/Enterで確定、プルダウンは変更時に即反映する
-export default function SearchForm({ condition, onSearch }) {
+export default function SearchForm({ condition, onSearch }: Props) {
   const [keyword, setKeyword] = useState(condition.keyword)
 
-  const submit = (e) => {
+  const submit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
     onSearch({ ...condition, keyword: keyword.trim() })
   }
@@ -24,7 +30,7 @@ export default function SearchForm({ condition, onSearch }) {
       />
       <select
         value={condition.status}
-        onChange={(e) => onSearch({ ...condition, status: e.target.value })}
+        onChange={(e) => onSearch({ ...condition, status: e.target.value as Status | '' })}
       >
         <option value="">ステータス: すべて</option>
         <option value="TODO">やること</option>
@@ -33,7 +39,7 @@ export default function SearchForm({ condition, onSearch }) {
       </select>
       <select
         value={condition.priority}
-        onChange={(e) => onSearch({ ...condition, priority: e.target.value })}
+        onChange={(e) => onSearch({ ...condition, priority: e.target.value as Priority | '' })}
       >
         <option value="">優先度: すべて</option>
         <option value="HIGH">高</option>

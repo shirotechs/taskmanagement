@@ -6,16 +6,18 @@ taskmanagement/
 ├── frontend/
 │   ├── index.html
 │   ├── package.json
-│   ├── vite.config.js
+│   ├── vite.config.ts
+│   ├── tsconfig.json（tsconfig.app.json / tsconfig.node.json を参照）
 │   └── src/
-│       ├── main.jsx
-│       ├── App.jsx
+│       ├── main.tsx
+│       ├── App.tsx
+│       ├── types.ts
 │       ├── components/
-│       │   ├── Board.jsx
-│       │   ├── Column.jsx
-│       │   └── Card.jsx
+│       │   ├── Board.tsx
+│       │   ├── Column.tsx
+│       │   └── Card.tsx
 │       ├── hooks/
-│       │   └── useTaskApi.js
+│       │   └── useTaskApi.ts
 │       └── styles/
 │           └── style.css
 └── backend/
