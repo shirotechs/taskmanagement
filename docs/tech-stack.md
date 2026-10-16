@@ -14,7 +14,7 @@
 
 | 層 | 技術 |
 |-------|------|
-| **フロントエンド** | React + Vite |
+| **フロントエンド** | React + Vite + TypeScript |
 | **状態管理** | React State (useState/useReducer) |
 | **バックエンド** | Java + Spring Boot |
 | **データベース** | MySQL |
