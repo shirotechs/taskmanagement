@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
+import type { SearchCondition, Task } from '../types.ts'
 
 // 検索条件に応じて GET /api/tasks を呼び、結果・読み込み状態・エラーを返す
-export function useTaskSearch({ keyword, status, priority }) {
-  const [tasks, setTasks] = useState([])
+export function useTaskSearch({ keyword, status, priority }: SearchCondition) {
+  const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -17,14 +18,14 @@ export function useTaskSearch({ keyword, status, priority }) {
     fetch(`/api/tasks?${params}`, { signal: controller.signal })
       .then((res) => {
         if (!res.ok) throw new Error(`APIエラー (HTTP ${res.status})`)
-        return res.json()
+        return res.json() as Promise<Task[]>
       })
       .then((data) => {
         setTasks(data)
         setError(null)
         setLoading(false)
       })
-      .catch((e) => {
+      .catch((e: Error) => {
         if (e.name === 'AbortError') return
         setError(e.message)
         setLoading(false)

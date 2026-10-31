@@ -1,12 +1,13 @@
 import { useState } from 'react'
-import Board from './components/Board.jsx'
-import SearchForm from './components/SearchForm.jsx'
-import { useTaskSearch } from './hooks/useTaskApi.js'
+import Board from './components/Board.tsx'
+import SearchForm from './components/SearchForm.tsx'
+import { useTaskSearch } from './hooks/useTaskApi.ts'
+import type { SearchCondition } from './types.ts'
 
-const INITIAL_CONDITION = { keyword: '', status: '', priority: '' }
+const INITIAL_CONDITION: SearchCondition = { keyword: '', status: '', priority: '' }
 
 export default function App() {
-  const [condition, setCondition] = useState(INITIAL_CONDITION)
+  const [condition, setCondition] = useState<SearchCondition>(INITIAL_CONDITION)
   const { tasks, loading, error } = useTaskSearch(condition)
 
   return (
