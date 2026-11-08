@@ -19,3 +19,11 @@ export interface SearchCondition {
   status: Status | ''
   priority: Priority | ''
 }
+
+// 新規登録フォームの入力値(空文字は「未指定」)
+export interface TaskInput {
+  title: string
+  description: string
+  priority: Priority | ''
+  dueDate: string
+}
