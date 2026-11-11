@@ -45,12 +45,18 @@ body {
 .cards { display: flex; flex-direction: column; gap: 8px; }
 .empty { margin: 0; color: #6b778c; font-size: 0.85rem; }
 
-.card { background: #fff; border-radius: 4px; padding: 10px; box-shadow: 0 1px 0 rgba(9, 30, 66, 0.25); }
+.column.drag-over { outline: 2px dashed #0079bf; outline-offset: -2px; }
+.card { cursor: grab; background: #fff; border-radius: 4px; padding: 10px; box-shadow: 0 1px 0 rgba(9, 30, 66, 0.25); }
 .card h3 { margin: 0 0 6px; font-size: 0.95rem; }
 .card .description { margin: 0 0 8px; font-size: 0.85rem; color: #5e6c84; white-space: pre-wrap; }
 .meta { display: flex; flex-wrap: wrap; gap: 6px; font-size: 0.75rem; }
 .badge { padding: 2px 8px; border-radius: 3px; color: #fff; }
+.priority-select { background: #97a0af; }
 .priority-high { background: #eb5a46; }
 .priority-medium { background: #f2a60c; }
 .priority-low { background: #61bd4f; }
 .due { padding: 2px 0; color: #5e6c84; }
+.card.dragging { opacity: 0.4; }
+.meta select, .meta input { font-size: 0.75rem; border-radius: 3px; border: 1px solid #c1c7d0; padding: 2px 4px; }
+.meta .priority-select { border: none; color: #fff; }
+.meta .priority-select option { color: #172b4d; background: #fff; }
