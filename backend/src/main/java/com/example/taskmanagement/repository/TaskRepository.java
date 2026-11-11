@@ -13,10 +13,15 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
         WHERE (:status IS NULL OR t.status = :status)
           AND (:priority IS NULL OR t.priority = :priority)
           AND (:keyword IS NULL OR LOWER(t.title) LIKE LOWER(CONCAT('%', :keyword, '%')))
-        ORDER BY t.id
+        ORDER BY t.sortOrder, t.id
         """)
     List<Task> search(
             @Param("status") Task.Status status,
             @Param("priority") Task.Priority priority,
             @Param("keyword") String keyword);
+
+    List<Task> findByStatusOrderBySortOrderAscIdAsc(Task.Status status);
+
+    @Query("SELECT COALESCE(MAX(t.sortOrder), -1) FROM Task t WHERE t.status = :status")
+    int findMaxSortOrder(@Param("status") Task.Status status);
 }
