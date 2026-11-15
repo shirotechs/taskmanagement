@@ -47,6 +47,8 @@ public class TaskService {
     @Transactional
     public TaskResponse update(Long id, TaskUpdateRequest request) {
         Task task = find(id);
+        task.setTitle(request.title().trim());
+        task.setDescription(request.description());
         task.setPriority(request.priority());
         task.setDueDate(request.dueDate());
         task.setUpdatedAt(LocalDateTime.now());
