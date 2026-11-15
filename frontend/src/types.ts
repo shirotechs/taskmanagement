@@ -13,6 +13,14 @@ export interface Task {
   updatedAt: string
 }
 
+// カード上で編集できる項目(description・priority・dueDate は null で未設定)
+export interface TaskFields {
+  title: string
+  description: string | null
+  priority: Priority | null
+  dueDate: string | null
+}
+
 // 検索条件(空文字は「指定なし」)
 export interface SearchCondition {
   keyword: string

@@ -42,9 +42,9 @@ public class TaskController {
         return taskService.create(request);
     }
 
-    // 優先度・期限日の更新(nullは「未設定」に戻す)
+    // タイトル・説明・優先度・期限日の更新(説明・優先度・期限日は null で「未設定」に戻す)
     @PatchMapping("/api/tasks/{id}")
-    public TaskResponse update(@PathVariable Long id, @RequestBody TaskUpdateRequest request) {
+    public TaskResponse update(@PathVariable Long id, @Valid @RequestBody TaskUpdateRequest request) {
         return taskService.update(id, request);
     }
 

@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import type { Priority, Status, Task } from '../types.ts'
+import type { Status, Task, TaskFields } from '../types.ts'
 import Card from './Card.tsx'
 
 interface Props {
@@ -10,16 +10,17 @@ interface Props {
   onDragStart: (id: number) => void
   onDragEnd: () => void
   onMove: (id: number, status: Status, beforeId: number | null) => void
-  onChange: (task: Task, fields: { priority: Priority | null; dueDate: string | null }) => void
+  onChange: (task: Task, patch: Partial<TaskFields>) => void
 }
 
 export default function Column({
   status, title, tasks, draggingId, onDragStart, onDragEnd, onMove, onChange,
 }: Props) {
   const cardsRef = useRef<HTMLDivElement>(null)
-  const [over, setOver] = useState(false)
+  // ドラッグ中の挿入位置。undefined=この列の上にいない、null=末尾、数値=そのカードの直前
+  const [dropBefore, setDropBefore] = useState<number | null | undefined>(undefined)
 
-  // ドロップ位置(マウスのY座標)より下にある最初のカードの手前に挿入する
+  // マウスのY座標より下にある最初のカードの手前に挿入する
   const findBeforeId = (clientY: number): number | null => {
     const cards = cardsRef.current?.querySelectorAll<HTMLElement>('.card') ?? []
     for (const el of cards) {
@@ -33,19 +34,19 @@ export default function Column({
 
   return (
     <section
-      className={`column${over ? ' drag-over' : ''}`}
+      className={`column${dropBefore !== undefined ? ' drag-over' : ''}`}
       onDragOver={(e) => {
         if (draggingId === null) return
         e.preventDefault()
         e.dataTransfer.dropEffect = 'move'
-        setOver(true)
+        setDropBefore(findBeforeId(e.clientY))
       }}
       onDragLeave={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setOver(false)
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setDropBefore(undefined)
       }}
       onDrop={(e) => {
         e.preventDefault()
-        setOver(false)
+        setDropBefore(undefined)
         if (draggingId !== null) onMove(draggingId, status, findBeforeId(e.clientY))
       }}
     >
@@ -55,15 +56,18 @@ export default function Column({
       <div className="cards" ref={cardsRef}>
         {tasks.length === 0 && <p className="empty">タスクはありません</p>}
         {tasks.map((task) => (
-          <Card
-            key={task.id}
-            task={task}
-            dragging={task.id === draggingId}
-            onDragStart={onDragStart}
-            onDragEnd={onDragEnd}
-            onChange={onChange}
-          />
+          <div key={task.id} className="card-slot">
+            {dropBefore === task.id && <div className="drop-line" />}
+            <Card
+              task={task}
+              dragging={task.id === draggingId}
+              onDragStart={onDragStart}
+              onDragEnd={onDragEnd}
+              onChange={onChange}
+            />
+          </div>
         ))}
+        {dropBefore === null && <div className="drop-line end" />}
       </div>
     </section>
   )

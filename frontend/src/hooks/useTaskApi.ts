@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import type { Priority, SearchCondition, Status, Task, TaskInput } from '../types.ts'
+import type { SearchCondition, Status, Task, TaskFields, TaskInput } from '../types.ts'
 
 // 検索条件に応じて GET /api/tasks を呼び、結果・読み込み状態・エラーを返す
 export function useTaskSearch({ keyword, status, priority }: SearchCondition, reloadKey = 0) {
@@ -54,11 +54,8 @@ export async function createTask(input: TaskInput): Promise<Task> {
   return res.json() as Promise<Task>
 }
 
-// PATCH /api/tasks/:id で優先度・期限日を更新する(null は未設定に戻す)
-export async function updateTask(
-  id: number,
-  fields: { priority: Priority | null; dueDate: string | null },
-): Promise<Task> {
+// PATCH /api/tasks/:id でタイトル・説明・優先度・期限日を更新する(説明・優先度・期限日は null で未設定に戻す)
+export async function updateTask(id: number, fields: TaskFields): Promise<Task> {
   const res = await fetch(`/api/tasks/${id}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },

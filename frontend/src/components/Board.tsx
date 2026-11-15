@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { Priority, Status, Task } from '../types.ts'
+import type { Status, Task, TaskFields } from '../types.ts'
 import Column from './Column.tsx'
 
 const COLUMNS: { status: Status; title: string }[] = [
@@ -11,7 +11,7 @@ const COLUMNS: { status: Status; title: string }[] = [
 interface Props {
   tasks: Task[]
   onMove: (id: number, status: Status, beforeId: number | null) => void
-  onChange: (task: Task, fields: { priority: Priority | null; dueDate: string | null }) => void
+  onChange: (task: Task, patch: Partial<TaskFields>) => void
 }
 
 export default function Board({ tasks, onMove, onChange }: Props) {

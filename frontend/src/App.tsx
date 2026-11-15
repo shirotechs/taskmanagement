@@ -3,7 +3,7 @@ import Board from './components/Board.tsx'
 import SearchForm from './components/SearchForm.tsx'
 import TaskForm from './components/TaskForm.tsx'
 import { moveTask, updateTask, useTaskSearch } from './hooks/useTaskApi.ts'
-import type { Priority, SearchCondition, Status, Task } from './types.ts'
+import type { SearchCondition, Status, Task, TaskFields } from './types.ts'
 
 const INITIAL_CONDITION: SearchCondition = { keyword: '', status: '', priority: '' }
 
@@ -34,7 +34,14 @@ export default function App() {
     void runAction(() => moveTask(id, status, beforeId))
   }
 
-  const handleChange = (task: Task, fields: { priority: Priority | null; dueDate: string | null }) => {
+  const handleChange = (task: Task, patch: Partial<TaskFields>) => {
+    const fields: TaskFields = {
+      title: task.title,
+      description: task.description,
+      priority: task.priority,
+      dueDate: task.dueDate,
+      ...patch,
+    }
     setTasks(tasks.map((t) => (t.id === task.id ? { ...t, ...fields } : t)))
     void runAction(() => updateTask(task.id, fields))
   }
