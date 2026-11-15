@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import type { SearchCondition, Task, TaskInput } from '../types.ts'
+import type { Priority, SearchCondition, Status, Task, TaskInput } from '../types.ts'
 
 // 検索条件に応じて GET /api/tasks を呼び、結果・読み込み状態・エラーを返す
 export function useTaskSearch({ keyword, status, priority }: SearchCondition, reloadKey = 0) {
@@ -34,7 +34,7 @@ export function useTaskSearch({ keyword, status, priority }: SearchCondition, re
     return () => controller.abort()
   }, [keyword, status, priority, reloadKey])
 
-  return { tasks, loading, error }
+  return { tasks, setTasks, loading, error }
 }
 
 // POST /api/tasks で新規登録する。空欄の項目は送らない(BE側で未指定扱い)
@@ -51,5 +51,30 @@ export async function createTask(input: TaskInput): Promise<Task> {
     body: JSON.stringify(body),
   })
   if (!res.ok) throw new Error(`登録に失敗しました (HTTP ${res.status})`)
+  return res.json() as Promise<Task>
+}
+
+// PATCH /api/tasks/:id で優先度・期限日を更新する(null は未設定に戻す)
+export async function updateTask(
+  id: number,
+  fields: { priority: Priority | null; dueDate: string | null },
+): Promise<Task> {
+  const res = await fetch(`/api/tasks/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(fields),
+  })
+  if (!res.ok) throw new Error(`更新に失敗しました (HTTP ${res.status})`)
+  return res.json() as Promise<Task>
+}
+
+// PUT /api/tasks/:id/move で指定列の beforeId の直前へ移動する(null なら末尾)
+export async function moveTask(id: number, status: Status, beforeId: number | null): Promise<Task> {
+  const res = await fetch(`/api/tasks/${id}/move`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status, beforeId }),
+  })
+  if (!res.ok) throw new Error(`移動に失敗しました (HTTP ${res.status})`)
   return res.json() as Promise<Task>
 }

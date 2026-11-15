@@ -36,6 +36,9 @@ public class Task {
     @Column(nullable = false, length = 20)
     private Status status;
 
+    @Column(name = "sort_order", nullable = false, columnDefinition = "INT NOT NULL DEFAULT 0")
+    private int sortOrder;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
@@ -96,6 +99,14 @@ public class Task {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public int getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(int sortOrder) {
+        this.sortOrder = sortOrder;
     }
 
     public LocalDateTime getCreatedAt() {
