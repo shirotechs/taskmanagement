@@ -9,6 +9,7 @@ import com.example.taskmanagement.service.TaskService;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,5 +53,12 @@ public class TaskController {
     @PutMapping("/api/tasks/{id}/move")
     public TaskResponse move(@PathVariable Long id, @Valid @RequestBody TaskMoveRequest request) {
         return taskService.move(id, request);
+    }
+
+    // 完了タスクの物理削除(未完了は 409、存在しなければ 404)
+    @DeleteMapping("/api/tasks/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        taskService.delete(id);
     }
 }
