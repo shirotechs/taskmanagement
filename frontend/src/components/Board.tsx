@@ -12,9 +12,10 @@ interface Props {
   tasks: Task[]
   onMove: (id: number, status: Status, beforeId: number | null) => void
   onChange: (task: Task, patch: Partial<TaskFields>) => void
+  onDelete: (id: number) => void
 }
 
-export default function Board({ tasks, onMove, onChange }: Props) {
+export default function Board({ tasks, onMove, onChange, onDelete }: Props) {
   const [draggingId, setDraggingId] = useState<number | null>(null)
 
   return (
@@ -30,6 +31,7 @@ export default function Board({ tasks, onMove, onChange }: Props) {
           onDragEnd={() => setDraggingId(null)}
           onMove={onMove}
           onChange={onChange}
+          onDelete={onDelete}
         />
       ))}
     </main>

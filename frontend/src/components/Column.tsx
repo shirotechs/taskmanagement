@@ -11,10 +11,11 @@ interface Props {
   onDragEnd: () => void
   onMove: (id: number, status: Status, beforeId: number | null) => void
   onChange: (task: Task, patch: Partial<TaskFields>) => void
+  onDelete: (id: number) => void
 }
 
 export default function Column({
-  status, title, tasks, draggingId, onDragStart, onDragEnd, onMove, onChange,
+  status, title, tasks, draggingId, onDragStart, onDragEnd, onMove, onChange, onDelete,
 }: Props) {
   const cardsRef = useRef<HTMLDivElement>(null)
   // ドラッグ中の挿入位置。undefined=この列の上にいない、null=末尾、数値=そのカードの直前
@@ -64,6 +65,7 @@ export default function Column({
               onDragStart={onDragStart}
               onDragEnd={onDragEnd}
               onChange={onChange}
+              onDelete={onDelete}
             />
           </div>
         ))}

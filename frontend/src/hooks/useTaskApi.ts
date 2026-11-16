@@ -65,6 +65,12 @@ export async function updateTask(id: number, fields: TaskFields): Promise<Task> 
   return res.json() as Promise<Task>
 }
 
+// DELETE /api/tasks/:id で完了タスクを物理削除する
+export async function deleteTask(id: number): Promise<void> {
+  const res = await fetch(`/api/tasks/${id}`, { method: 'DELETE' })
+  if (!res.ok) throw new Error(`削除に失敗しました (HTTP ${res.status})`)
+}
+
 // PUT /api/tasks/:id/move で指定列の beforeId の直前へ移動する(null なら末尾)
 export async function moveTask(id: number, status: Status, beforeId: number | null): Promise<Task> {
   const res = await fetch(`/api/tasks/${id}/move`, {

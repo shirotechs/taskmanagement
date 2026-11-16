@@ -7,9 +7,10 @@ interface Props {
   onDragStart: (id: number) => void
   onDragEnd: () => void
   onChange: (task: Task, patch: Partial<TaskFields>) => void
+  onDelete: (id: number) => void
 }
 
-export default function Card({ task, dragging, onDragStart, onDragEnd, onChange }: Props) {
+export default function Card({ task, dragging, onDragStart, onDragEnd, onChange, onDelete }: Props) {
   const [editing, setEditing] = useState(false)
   const [title, setTitle] = useState(task.title)
   const [description, setDescription] = useState(task.description ?? '')
@@ -98,6 +99,19 @@ export default function Card({ task, dragging, onDragStart, onDragEnd, onChange 
           onChange={(e) => onChange(task, { dueDate: e.target.value || null })}
         />
       </div>
+      {task.status === 'DONE' && !editing && (
+        <button
+          type="button"
+          className="delete-button"
+          onClick={() => {
+            if (window.confirm('このタスクを完全に削除します。元に戻せません。よろしいですか?')) {
+              onDelete(task.id)
+            }
+          }}
+        >
+          削除
+        </button>
+      )}
     </article>
   )
 }
