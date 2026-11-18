@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Board from './components/Board.tsx'
 import SearchForm from './components/SearchForm.tsx'
 import TaskForm from './components/TaskForm.tsx'
-import { moveTask, updateTask, useTaskSearch } from './hooks/useTaskApi.ts'
+import { deleteTask, moveTask, updateTask, useTaskSearch } from './hooks/useTaskApi.ts'
 import type { SearchCondition, Status, Task, TaskFields } from './types.ts'
 
 const INITIAL_CONDITION: SearchCondition = { keyword: '', status: '', priority: '' }
@@ -46,6 +46,11 @@ export default function App() {
     void runAction(() => updateTask(task.id, fields))
   }
 
+  const handleDelete = (id: number) => {
+    setTasks(tasks.filter((t) => t.id !== id))
+    void runAction(() => deleteTask(id))
+  }
+
   return (
     <div className="app">
       <header className="app-header">
@@ -56,7 +61,7 @@ export default function App() {
       {error && <p className="message error">読み込みに失敗しました: {error}</p>}
       {actionError && <p className="message error">{actionError}</p>}
       {loading && !error && <p className="message">読み込み中...</p>}
-      <Board tasks={tasks} onMove={handleMove} onChange={handleChange} />
+      <Board tasks={tasks} onMove={handleMove} onChange={handleChange} onDelete={handleDelete} />
     </div>
   )
 }

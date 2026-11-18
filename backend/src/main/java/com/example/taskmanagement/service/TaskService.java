@@ -84,6 +84,16 @@ public class TaskService {
         return TaskResponse.from(task);
     }
 
+    // 完了(DONE)のタスクのみ、DBから物理削除する
+    @Transactional
+    public void delete(Long id) {
+        Task task = find(id);
+        if (task.getStatus() != Task.Status.DONE) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "完了していないタスクは削除できません: " + id);
+        }
+        taskRepository.delete(task);
+    }
+
     private Task find(Long id) {
         return taskRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "タスクが見つかりません: " + id));
