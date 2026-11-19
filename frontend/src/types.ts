@@ -35,3 +35,6 @@ export interface TaskInput {
   priority: Priority | ''
   dueDate: string
 }
+
+// 列の並び順(manual=手動順、priority=優先度順、dueDate=期限順)
+export type SortMode = 'manual' | 'priority' | 'dueDate'
