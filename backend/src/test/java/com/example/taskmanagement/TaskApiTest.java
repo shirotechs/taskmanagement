@@ -65,6 +65,15 @@ class TaskApiTest {
     }
 
     @Test
+    void どの列のタスクも削除できる() throws Exception {
+        long a = create("A", "TODO");
+        long b = create("B", "IN_PROGRESS");
+        mvc.perform(delete("/api/tasks/" + a)).andExpect(status().isNoContent());
+        mvc.perform(delete("/api/tasks/" + b)).andExpect(status().isNoContent());
+        mvc.perform(get("/api/tasks")).andExpect(jsonPath("$.length()").value(0));
+    }
+
+    @Test
     void 列内で並び替えできる() throws Exception {
         long a = create("A", "TODO");
         long b = create("B", "TODO");

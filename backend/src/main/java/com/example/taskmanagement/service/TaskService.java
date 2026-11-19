@@ -92,14 +92,10 @@ public class TaskService {
         return TaskResponse.from(task);
     }
 
-    // 完了(DONE)のタスクのみ、DBから物理削除する
+    // ステータスに関わらず、タスクをDBから物理削除する
     @Transactional
     public void delete(Long id) {
-        Task task = find(id);
-        if (task.getStatus() != Task.Status.DONE) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "完了していないタスクは削除できません: " + id);
-        }
-        taskRepository.delete(task);
+        taskRepository.delete(find(id));
     }
 
     // LIKE のワイルドカード(% _)とエスケープ文字(!)をリテラルとして検索する
