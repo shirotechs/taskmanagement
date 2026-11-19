@@ -99,7 +99,7 @@ export default function Card({ task, dragging, onDragStart, onDragEnd, onChange,
           onChange={(e) => onChange(task, { dueDate: e.target.value || null })}
         />
       </div>
-      {task.status === 'DONE' && !editing && (
+      {!editing && (
         <button
           type="button"
           className="delete-button"

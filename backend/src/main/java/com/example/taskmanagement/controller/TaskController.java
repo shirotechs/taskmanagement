@@ -55,7 +55,7 @@ public class TaskController {
         return taskService.move(id, request);
     }
 
-    // 完了タスクの物理削除(未完了は 409、存在しなければ 404)
+    // タスクの物理削除(存在しなければ 404)
     @DeleteMapping("/api/tasks/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
