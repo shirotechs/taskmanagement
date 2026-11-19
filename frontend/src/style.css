@@ -1,0 +1,4 @@
+
+.sort-buttons { float: right; display: inline-flex; gap: 4px; }
+.sort-button { font-size: 12px; padding: 2px 8px; border: 1px solid #c4c9d4; border-radius: 4px; background: #fff; cursor: pointer; }
+.sort-button.active { background: #0079bf; border-color: #0079bf; color: #fff; }

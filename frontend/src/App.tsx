@@ -24,12 +24,27 @@ export default function App() {
     }
   }
 
-  const handleMove = (id: number, status: Status, beforeId: number | null) => {
+  // displayedIds: 並び替え表示中の移動先列の表示順(ドラッグ中のカードを除く)。指定時はその順序を確定する
+  const handleMove = (id: number, status: Status, beforeId: number | null, displayedIds?: number[]) => {
     const moving = tasks.find((t) => t.id === id)
     if (!moving) return
-    const rest = tasks.filter((t) => t.id !== id)
-    const index = beforeId === null ? -1 : rest.findIndex((t) => t.id === beforeId)
     const moved = { ...moving, status }
+    const rest = tasks.filter((t) => t.id !== id)
+
+    if (displayedIds) {
+      const index = beforeId === null ? -1 : displayedIds.indexOf(beforeId)
+      const orderedIds = index < 0 ? [...displayedIds, id] : [...displayedIds.slice(0, index), id, ...displayedIds.slice(index)]
+      const byId = new Map([...rest, moved].map((t) => [t.id, t]))
+      const others = rest.filter((t) => t.status !== status)
+      setTasks([...others, ...orderedIds.map((i) => byId.get(i)!)])
+      // 既存のmove APIで、確定したい順に末尾へ移していく(直列で実行)
+      void runAction(async () => {
+        for (const orderedId of orderedIds) await moveTask(orderedId, status, null)
+      })
+      return
+    }
+
+    const index = beforeId === null ? -1 : rest.findIndex((t) => t.id === beforeId)
     setTasks(index < 0 ? [...rest, moved] : [...rest.slice(0, index), moved, ...rest.slice(index)])
     void runAction(() => moveTask(id, status, beforeId))
   }

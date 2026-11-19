@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
-import type { Status, Task, TaskFields } from '../types.ts'
+import { sortTasks } from '../sortTasks.ts'
+import type { SortMode, Status, Task, TaskFields } from '../types.ts'
 import Card from './Card.tsx'
 
 interface Props {
@@ -9,14 +10,22 @@ interface Props {
   draggingId: number | null
   onDragStart: (id: number) => void
   onDragEnd: () => void
-  onMove: (id: number, status: Status, beforeId: number | null) => void
+  sortMode: SortMode
+  onSortChange: (mode: SortMode) => void
+  onMove: (id: number, status: Status, beforeId: number | null, displayedIds?: number[]) => void
   onChange: (task: Task, patch: Partial<TaskFields>) => void
   onDelete: (id: number) => void
 }
 
+const SORT_OPTIONS: { mode: SortMode; label: string }[] = [
+  { mode: 'priority', label: '優先度順' },
+  { mode: 'dueDate', label: '期限順' },
+]
+
 export default function Column({
-  status, title, tasks, draggingId, onDragStart, onDragEnd, onMove, onChange, onDelete,
+  status, title, tasks: rawTasks, draggingId, onDragStart, onDragEnd, sortMode, onSortChange, onMove, onChange, onDelete,
 }: Props) {
+  const tasks = sortTasks(rawTasks, sortMode)
   const cardsRef = useRef<HTMLDivElement>(null)
   // ドラッグ中の挿入位置。undefined=この列の上にいない、null=末尾、数値=そのカードの直前
   const [dropBefore, setDropBefore] = useState<number | null | undefined>(undefined)
@@ -48,11 +57,27 @@ export default function Column({
       onDrop={(e) => {
         e.preventDefault()
         setDropBefore(undefined)
-        if (draggingId !== null) onMove(draggingId, status, findBeforeId(e.clientY))
+        if (draggingId === null) return
+        // 並び替え中は、表示中の順序(ドラッグ中のカードを除く)を渡して確定させる
+        const displayedIds = sortMode === 'manual' ? undefined : tasks.map((t) => t.id).filter((id) => id !== draggingId)
+        onMove(draggingId, status, findBeforeId(e.clientY), displayedIds)
       }}
     >
       <h2>
         {title} <span className="count">{tasks.length}</span>
+        <span className="sort-buttons">
+          {SORT_OPTIONS.map(({ mode, label }) => (
+            <button
+              key={mode}
+              type="button"
+              className={`sort-button${sortMode === mode ? ' active' : ''}`}
+              aria-pressed={sortMode === mode}
+              onClick={() => onSortChange(sortMode === mode ? 'manual' : mode)}
+            >
+              {label}
+            </button>
+          ))}
+        </span>
       </h2>
       <div className="cards" ref={cardsRef}>
         {tasks.length === 0 && <p className="empty">タスクはありません</p>}
