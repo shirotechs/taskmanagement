@@ -1,3 +1,4 @@
+-- 開発用サンプルデータ(devプロファイル専用。実行すると tasks を全削除して再投入する)
 DELETE FROM tasks;
 ALTER TABLE tasks AUTO_INCREMENT = 1;
 
