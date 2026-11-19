@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 public record TaskCreateRequest(
         @NotBlank @Size(max = 255) String title,
-        String description,
+        @Size(max = 10000) String description,
         Task.Priority priority,
         LocalDate dueDate,
         Task.Status status) {

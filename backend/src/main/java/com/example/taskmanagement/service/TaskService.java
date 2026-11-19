@@ -24,7 +24,7 @@ public class TaskService {
     }
 
     public List<TaskResponse> search(Task.Status status, Task.Priority priority, String keyword) {
-        return taskRepository.search(status, priority, keyword).stream()
+        return taskRepository.search(status, priority, escapeLike(keyword)).stream()
                 .map(TaskResponse::from)
                 .toList();
     }
@@ -38,6 +38,7 @@ public class TaskService {
         task.setPriority(request.priority());
         task.setDueDate(request.dueDate());
         task.setStatus(request.status() != null ? request.status() : Task.Status.TODO);
+        taskRepository.findByStatusOrderBySortOrderAscIdAsc(task.getStatus());
         task.setSortOrder(taskRepository.findMaxSortOrder(task.getStatus()) + 1);
         task.setCreatedAt(now);
         task.setUpdatedAt(now);
@@ -55,7 +56,7 @@ public class TaskService {
         return TaskResponse.from(taskRepository.save(task));
     }
 
-    // 移動先の列で beforeId のタスクの直前に挿入する(beforeId が null・列内に無い場合は末尾)
+    // 移動先の列で beforeId のタスクの直前に挿入する(beforeId が null の場合は末尾。不正な beforeId は 400)
     @Transactional
     public TaskResponse move(Long id, TaskMoveRequest request) {
         Task task = find(id);
@@ -64,10 +65,17 @@ public class TaskService {
         column.removeIf(t -> t.getId().equals(id));
 
         int index = column.size();
-        for (int i = 0; i < column.size(); i++) {
-            if (column.get(i).getId().equals(request.beforeId())) {
-                index = i;
-                break;
+        if (request.beforeId() != null) {
+            index = -1;
+            for (int i = 0; i < column.size(); i++) {
+                if (column.get(i).getId().equals(request.beforeId())) {
+                    index = i;
+                    break;
+                }
+            }
+            if (index < 0) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "beforeId が移動先の列に存在しません: " + request.beforeId());
             }
         }
         column.add(index, task);
@@ -92,6 +100,14 @@ public class TaskService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "完了していないタスクは削除できません: " + id);
         }
         taskRepository.delete(task);
+    }
+
+    // LIKE のワイルドカード(% _)とエスケープ文字(!)をリテラルとして検索する
+    private static String escapeLike(String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            return null;
+        }
+        return keyword.replace("!", "!!").replace("%", "!%").replace("_", "!_");
     }
 
     private Task find(Long id) {

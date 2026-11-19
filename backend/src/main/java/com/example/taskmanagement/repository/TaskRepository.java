@@ -1,8 +1,10 @@
 package com.example.taskmanagement.repository;
 
 import com.example.taskmanagement.entity.Task;
+import jakarta.persistence.LockModeType;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -12,7 +14,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
         SELECT t FROM Task t
         WHERE (:status IS NULL OR t.status = :status)
           AND (:priority IS NULL OR t.priority = :priority)
-          AND (:keyword IS NULL OR LOWER(t.title) LIKE LOWER(CONCAT('%', :keyword, '%')))
+          AND (:keyword IS NULL OR LOWER(t.title) LIKE LOWER(CONCAT('%', :keyword, '%')) ESCAPE '!')
         ORDER BY t.sortOrder, t.id
         """)
     List<Task> search(
@@ -20,6 +22,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             @Param("priority") Task.Priority priority,
             @Param("keyword") String keyword);
 
+    // 列の並びを更新する処理(create/move)用。行ロックで同時更新を直列化する
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     List<Task> findByStatusOrderBySortOrderAscIdAsc(Task.Status status);
 
     @Query("SELECT COALESCE(MAX(t.sortOrder), -1) FROM Task t WHERE t.status = :status")
